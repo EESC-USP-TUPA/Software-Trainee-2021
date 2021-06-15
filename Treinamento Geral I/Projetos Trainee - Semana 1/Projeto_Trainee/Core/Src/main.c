@@ -100,8 +100,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-//  ADC_Init(&hadc1, adc.buffer);
-  ADC_Init(&hadc1, adc.buffer);
+  ADC_Init(&hadc1, adc.buffer); //Inicialização do ADC
 
   /* USER CODE END 2 */
 
@@ -112,8 +111,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-
 
 	  HAL_Delay(50);
 
@@ -282,11 +279,14 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-    ADC_GetValues(adc.buffer, adc.data);
+    ADC_GetValues(adc.buffer, adc.data); //Faz a leitura dos dados
     sprintf(uart.message, "1: %ld - 2: %ld\r\n", adc.data[0], adc.data[1]);
     HAL_UART_Transmit(&huart1, (uint8_t*)uart.message, strlen(uart.message), HAL_MAX_DELAY);
-    //UART_SendMessage(&huart1, uart.message);
+    //Envia a mensagem via UART
 }
+
+
+//UART_SendMessage(&huart1, uart.message);
 
 /* USER CODE END 4 */
 

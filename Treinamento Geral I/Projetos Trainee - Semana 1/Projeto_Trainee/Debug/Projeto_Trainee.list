@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00017b49  00000000  00000000  0002d420  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00009caf  00000000  00000000  00044f69  2**0
+ 17 .debug_line   00009cb1  00000000  00000000  00044f69  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008544c  00000000  00000000  0004ec18  2**0
+ 18 .debug_str    0008544c  00000000  00000000  0004ec1a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000d4064  2**0
+ 19 .comment      00000053  00000000  00000000  000d4066  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000022c4  00000000  00000000  000d40b8  2**2
+ 20 .debug_frame  000022c4  00000000  00000000  000d40bc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -86,9 +86,11 @@ Disassembly of section .text:
  800015a:	4770      	bx	lr
 
 0800015c <ADC_Init>:
-#include "adc.h"
-
-
+/**
+  * @brief Inicia a leitura analógico-digital
+  * @param Endereço do Handler do ADC e vetor de Buffer
+  * @retval None
+  */
 void ADC_Init(ADC_HandleTypeDef *hadc1, uint32_t *ADC_Buffer) {
  800015c:	b580      	push	{r7, lr}
  800015e:	b082      	sub	sp, #8
@@ -100,6 +102,7 @@ void ADC_Init(ADC_HandleTypeDef *hadc1, uint32_t *ADC_Buffer) {
  8000168:	6839      	ldr	r1, [r7, #0]
  800016a:	6878      	ldr	r0, [r7, #4]
  800016c:	f000 fc58 	bl	8000a20 <HAL_ADC_Start_DMA>
+
 }
  8000170:	bf00      	nop
  8000172:	3708      	adds	r7, #8
@@ -107,8 +110,11 @@ void ADC_Init(ADC_HandleTypeDef *hadc1, uint32_t *ADC_Buffer) {
  8000176:	bd80      	pop	{r7, pc}
 
 08000178 <ADC_GetValues>:
-
-
+/**
+  * @brief Faz a leitura e conversão do buffer para o vetor de dados
+  * @param Vetor de Buffer e Vetor de destino dos dados
+  * @retval None
+  */
 void ADC_GetValues(uint32_t *ADC_Buffer, uint32_t *ADC_Result) {
  8000178:	b480      	push	{r7}
  800017a:	b085      	sub	sp, #20
@@ -193,15 +199,14 @@ int main(void)
  80001e4:	f000 f8aa 	bl	800033c <MX_USART1_UART_Init>
   /* USER CODE BEGIN 2 */
 
-//  ADC_Init(&hadc1, adc.buffer);
-  ADC_Init(&hadc1, adc.buffer);
+  ADC_Init(&hadc1, adc.buffer); //Inicialização do ADC
  80001e8:	4903      	ldr	r1, [pc, #12]	; (80001f8 <main+0x2c>)
  80001ea:	4804      	ldr	r0, [pc, #16]	; (80001fc <main+0x30>)
  80001ec:	f7ff ffb6 	bl	800015c <ADC_Init>
+  {
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-
 
 	  HAL_Delay(50);
  80001f0:	2032      	movs	r0, #50	; 0x32
@@ -604,7 +609,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
  8000412:	b082      	sub	sp, #8
  8000414:	af00      	add	r7, sp, #0
  8000416:	6078      	str	r0, [r7, #4]
-    ADC_GetValues(adc.buffer, adc.data);
+    ADC_GetValues(adc.buffer, adc.data); //Faz a leitura dos dados
  8000418:	490d      	ldr	r1, [pc, #52]	; (8000450 <HAL_ADC_ConvCpltCallback+0x40>)
  800041a:	480e      	ldr	r0, [pc, #56]	; (8000454 <HAL_ADC_ConvCpltCallback+0x44>)
  800041c:	f7ff feac 	bl	8000178 <ADC_GetValues>
@@ -625,7 +630,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
  800043e:	4907      	ldr	r1, [pc, #28]	; (800045c <HAL_ADC_ConvCpltCallback+0x4c>)
  8000440:	4807      	ldr	r0, [pc, #28]	; (8000460 <HAL_ADC_ConvCpltCallback+0x50>)
  8000442:	f001 ff6a 	bl	800231a <HAL_UART_Transmit>
-    //UART_SendMessage(&huart1, uart.message);
+    //Envia a mensagem via UART
 }
  8000446:	bf00      	nop
  8000448:	3708      	adds	r7, #8
